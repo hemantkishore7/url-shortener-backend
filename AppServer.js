@@ -2,8 +2,19 @@ const express = require('express');
 const app = express();
 const bodyparser = require("body-parser")
 
+//Importing Routes
+const user = require("./Router/user.router")
+const passwordReset = require("./Router/passwordReset.router")
+const urlShort = require("./Router/urlShort.router")
+
+
 //Middleware
 app.use(bodyparser.json());
+
+//inject Router
+app.use("/api",user)
+app.use("/api",passwordReset)
+app.use("/api",urlShort)
 
 
 //Test
