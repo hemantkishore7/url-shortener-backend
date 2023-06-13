@@ -14,7 +14,7 @@ urlShortRouter.post("/generate",async(req,res)=>{
         longUrl:longUrl,
         shortUrl:shortID,
         redirectURL:longUrl,
-        visitHistry:[]
+        clickCount:0
     })
 
     return res.status(200).json({data:data})
@@ -23,7 +23,7 @@ urlShortRouter.post("/generate",async(req,res)=>{
 //Count how many times click the link
 urlShortRouter.get("/:id", async(req,res)=>{
    try {
-    Url.findOne({shortUrl:req.params.id},(err,data)=>{
+    await Url.findOne({shortUrl:req.params.id},(err,data)=>{
         if(err) {
             return res.status(400).send('Error while redirect url')
         }
@@ -35,19 +35,31 @@ urlShortRouter.get("/:id", async(req,res)=>{
         })
     })
    } catch (error) {
-    res.status(500).send('Internal Server Error', error)
+    return res.status(500).json({
+        message:'Internal Server Error',
+         error:error})
    }
 })
 
 //Get all url
-urlShortRouter.get("/getAll", async(req,res)=>{
+urlShortRouter.get("/getAll",async function(req,res){
+    let data;
     try {
-       const data = await Url.find()
-       if(!data) return res.status(400).send("Cannot able to fetch all URL")
-       return res.status(200).send({success:true,data:data})
-    } catch (error) {
-        res.status(500).send('Internal Server Error', err)
+       const data = await Url.find();
     }
+    catch(error) {
+        console.log(error);
+        // res.status(500).json({
+        //     message:'Internal Server Error',
+        //      error:error
+        //     })
+
+    };
+    if(!data) return res.status(400).json("unexcepted error")
+    res.status(200).json({
+     message:"fetched all the URL",
+     data:data
+    })
 })
 
 //Get Url by id
