@@ -57,7 +57,8 @@ urlShortRouter.get("/get/:id", async (req, res) => {
     console.log(error)
   }
   if (!data) return res.status(400).send("Cannot able to fetch URL");
-  return res.status(200).send({ success: true, data: data });
+  return res.status(200).json(data)
+
 });
 
 //Delete url
