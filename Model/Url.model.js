@@ -14,7 +14,10 @@ const urlSchema = new mongoose.Schema({
         require: true,
         unique: true,
     },
-    visitHistry: [{timestamp: {type: Number } }],
+    clickCount:{
+        type:Number,
+        default:0
+    }
     
 })
 
