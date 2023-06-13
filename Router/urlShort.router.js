@@ -21,14 +21,22 @@ urlShortRouter.post("/generate",async(req,res)=>{
 })
 
 //Count how many times click the link
-urlShortRouter.post("/analytics/:id", async(req,res)=>{
-    const shortUrl = req.params.id;
-    const result = await Url.findOne({shortUrl:shortUrl})
-
-    return res.json({
-        totalClicks: result.visitHistry.length,
-        analytics:result.visitHistry,
+urlShortRouter.get("/:id", async(req,res)=>{
+   try {
+    Url.findOne({shortUrl:req.params.id},(err,data)=>{
+        if(err) {
+            return res.status(400).send('Error while redirect url')
+        }
+        Url.findByIdAndUpdate({_id:data.id},{$inc : {clickCount:1}},(err,data)=>{
+            if(err){
+                res.status(400).send('Error while redirect url')
+            }
+            res.redirect(data.longUrl)
+        })
     })
+   } catch (error) {
+    res.status(500).send('Internal Server Error', error)
+   }
 })
 
 //Get all url
